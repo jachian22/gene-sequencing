@@ -34,12 +34,6 @@ class GeneReader(object):
 		lenL = len(larger)
 		lenS = len(smaller)
 
-		# check for fragment inside another fragment
-		for i in xrange(lenL - lenS + 1):
-			if smaller == larger[i: i+lenS]:
-				return larger
-
-		# head-tail
 		streak1 = 0
 		streak2 = 0
 		for i, val in enumerate(smaller):
@@ -64,16 +58,16 @@ class GeneReader(object):
 		usedFragments = set()
 		currentFragment = None
 
-		for i, fragment in enumerate(fragmentList):
+		for i in xrange(len(fragmentList)):
 			if currentFragment == None:
 				usedFragments.add(i)
-				currentFragment = fragment
+				currentFragment = fragmentList[i]
 			if i in usedFragments: continue
-			for j, otherFrag in enumerate(fragmentList):
+			for j in xrange(i+1, len(fragmentList)):
 				if j in usedFragments: continue
-				combined = self.combineFrags(currentFragment, otherFrag)
-				if combined != None:
-					currentFragment = combined
+				joined = self.combineFrags(currentFragment, fragmentList[j])
+				if joined != None:
+					currentFragment = joined
 					usedFragments.add(j)
 			combinations.append(currentFragment)
 			currentFragment = None
